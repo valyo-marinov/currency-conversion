@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -48,3 +49,55 @@
     </script>
 </body>
 </html>
+=======
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Конвертор на валути</title>
+</head>
+<body>
+    <h1>Конвертор на валути</h1>
+    
+    <div class="converter">
+        <label>Сума: <input type="number" id="amount" value="1"></label>
+        <label>От: 
+            <select id="from-currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="BGN">BGN</option>
+            </select>
+        </label>
+        <label>Към:
+            <select id="to-currency">
+                <option value="BGN">BGN</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+            </select>
+        </label>
+        <button onclick="convertCurrency()">Конвертирай</button>
+    </div>
+
+    <div id="data-container"></div>
+
+    <script>
+        function convertCurrency() {
+            const amount = document.getElementById('amount').value;
+            const from = document.getElementById('from-currency').value;
+            const to = document.getElementById('to-currency').value;
+
+            fetch(`fetch_data.php?from=${from}&to=${to}&amount=${amount}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('data-container').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Грешка:', error);
+                });
+        }
+    </script>
+</body>
+</html>
+>>>>>>> ca78743599d20703ede018748886e71fa520d9c8
