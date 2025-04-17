@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -12,92 +11,86 @@
     
     <div class="converter">
         <label>Сума: <input type="number" id="amount" value="1"></label>
-        <label>От: 
-            <select id="from-currency">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="BGN">BGN</option>
-            </select>
+
+        <label>От:
+            <select id="from-currency"></select>
+            или 
+            <input type="text" id="from-input" placeholder="напр. USD" list="currency-list">
         </label>
+
         <label>Към:
-            <select id="to-currency">
-                <option value="BGN">BGN</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-            </select>
+            <select id="to-currency"></select>
+            или 
+            <input type="text" id="to-input" placeholder="напр. BGN" list="currency-list">
         </label>
+
         <button onclick="convertCurrency()">Конвертирай</button>
     </div>
 
     <div id="data-container"></div>
 
-    <script>
-        function convertCurrency() {
-            const amount = document.getElementById('amount').value;
-            const from = document.getElementById('from-currency').value;
-            const to = document.getElementById('to-currency').value;
+    <!-- DATALIST за подсказване -->
+    <datalist id="currency-list"></datalist>
 
-            fetch(`fetch_data.php?from=${from}&to=${to}&amount=${amount}`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('data-container').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Грешка:', error);
-                });
+<script>
+    const apiKey = "da5ccaf3255e57986ac9ff4d";
+
+    async function loadCurrencies() {
+        try {
+            const res = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`);
+            const data = await res.json();
+            const currencies = Object.keys(data.conversion_rates);
+
+            const fromSelect = document.getElementById('from-currency');
+            const toSelect = document.getElementById('to-currency');
+            const dataList = document.getElementById('currency-list');
+
+            currencies.forEach(code => {
+                // За падащи менюта
+                const optionFrom = document.createElement('option');
+                optionFrom.value = code;
+                optionFrom.textContent = code;
+                fromSelect.appendChild(optionFrom);
+
+                const optionTo = document.createElement('option');
+                optionTo.value = code;
+                optionTo.textContent = code;
+                toSelect.appendChild(optionTo);
+
+                // За автодовършване
+                const datalistOption = document.createElement('option');
+                datalistOption.value = code;
+                dataList.appendChild(datalistOption);
+            });
+
+            fromSelect.value = "USD";
+            toSelect.value = "BGN";
+        } catch (error) {
+            console.error('Грешка при зареждане на валутите:', error);
         }
-    </script>
+    }
+
+    function convertCurrency() {
+        const amount = document.getElementById('amount').value;
+
+        const fromManual = document.getElementById('from-input').value.trim().toUpperCase();
+        const toManual = document.getElementById('to-input').value.trim().toUpperCase();
+
+        const from = fromManual || document.getElementById('from-currency').value;
+        const to = toManual || document.getElementById('to-currency').value;
+
+        fetch(`fetch_data.php?from=${from}&to=${to}&amount=${amount}`)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('data-container').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Грешка:', error);
+            });
+    }
+
+    loadCurrencies();
+</script>
 </body>
 </html>
-=======
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Конвертор на валути</title>
-</head>
-<body>
-    <h1>Конвертор на валути</h1>
-    
-    <div class="converter">
-        <label>Сума: <input type="number" id="amount" value="1"></label>
-        <label>От: 
-            <select id="from-currency">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="BGN">BGN</option>
-            </select>
-        </label>
-        <label>Към:
-            <select id="to-currency">
-                <option value="BGN">BGN</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-            </select>
-        </label>
-        <button onclick="convertCurrency()">Конвертирай</button>
-    </div>
 
-    <div id="data-container"></div>
-
-    <script>
-        function convertCurrency() {
-            const amount = document.getElementById('amount').value;
-            const from = document.getElementById('from-currency').value;
-            const to = document.getElementById('to-currency').value;
-
-            fetch(`fetch_data.php?from=${from}&to=${to}&amount=${amount}`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('data-container').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Грешка:', error);
-                });
-        }
-    </script>
-</body>
-</html>
->>>>>>> ca78743599d20703ede018748886e71fa520d9c8
